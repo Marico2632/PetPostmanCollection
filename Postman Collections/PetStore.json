@@ -1,0 +1,870 @@
+{
+	"info": {
+		"_postman_id": "160a6abf-40db-4ab8-877f-5cb5a0ccd86f",
+		"name": "Project_Petstore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Pets",
+			"item": [
+				{
+					"name": "Finds Pets by status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ca140f23-ff07-4902-b1cf-4e8f87d10db7",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Each pet in the response has a status of 'sold'\", function () {",
+									"    pm.response.json().forEach(function(pet) {",
+									"        pm.expect(pet.status).to.equal(pm.collectionVariables.get(\"petStatus\"));",
+									"    });",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"petId\", jsonData[0].id);",
+									"pm.collectionVariables.set(\"petStatus\", jsonData[0].status);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3a441f76-cb60-456b-8fff-f0fa48adace9",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "6b233bdf-fc00-4cd7-aad6-9910159de365",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cache-Control",
+								"value": "no-cache",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/pet/findByStatus?status={{petStatus}}",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"pet",
+								"findByStatus"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "{{petStatus}}",
+									"description": "Can be available, sold or pending"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Pet by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "510a2a63-b123-42b8-9070-a9f9b0d3259e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check the response pet by 'id'\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.equal(pm.collectionVariables.get(\"petId\"));",
+									"});",
+									"",
+									"pm.test(\"Check that pet status is correct\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(pm.collectionVariables.get(\"petStatus\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "13d10270-b42f-4b06-a120-07acf4c46ec1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_URL}}/pet/{{petId}}",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"pet",
+								"{{petId}}"
+							],
+							"query": [
+								{
+									"key": "petId",
+									"value": "9223372036854350208",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a new pet",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "376f1a56-b7ee-4418-bc45-69c3ca8a91d5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0eea1da9-bfbc-4750-b404-4109c124c309",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"// Verify the structure of the response JSON object",
+									"var expectedFields = [\"id\", \"category\", \"name\", \"photoUrls\", \"tags\", \"status\"];",
+									"pm.test(\"Response has all the expected fields\", function () {",
+									"  var responseData = pm.response.json();",
+									"  expectedFields.forEach(function (field) {",
+									"    pm.expect(responseData).to.have.property(field);",
+									"  });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "b013148b-6b7f-44a6-9a60-374a5eb293f6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "api_key",
+								"value": "special-key",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 4,\n    \"category\": {\n        \"id\": 1,\n        \"name\": \"Cat\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n        \"string\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 7805,\n            \"name\": \"Mainecoon\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{Base_URL}}/pet"
+					},
+					"response": []
+				},
+				{
+					"name": "Uploads an image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "79bb9ed0-4b75-4c0b-adb3-bb3511927b1f",
+								"exec": [
+									"// Test to check if the response has code 200",
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test to check if the response has all required fields",
+									"pm.test(\"Response has all required fields\", function () {",
+									"  var responseJSON = pm.response.json();",
+									"  pm.expect(responseJSON).to.have.property('code');",
+									"  pm.expect(responseJSON).to.have.property('type');",
+									"  pm.expect(responseJSON).to.have.property('message');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "e878d24b-dc4d-4ebd-b40f-05947c2e2288",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"fileNotInWorkingDirectoryWarning": "This file isn't in your working directory. Teammates you share this request with won't be able to use this file. To make collaboration easier you can setup your working directory in Settings.",
+									"filesNotInWorkingDirectory": [
+										"/Users/marico/Downloads/ferocious-tiger.avif"
+									],
+									"src": "/Users/marico/Downloads/ferocious-tiger.avif"
+								}
+							]
+						},
+						"url": "{{Base_URL}}/pet/{{petId}}/uploadImage"
+					},
+					"response": []
+				},
+				{
+					"name": "Updates pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5dd296fa-a5d1-46cc-b1dd-2d5766b4a263",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response data is valid\", function () {",
+									"    var responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object').that.has.property('id');",
+									"    pm.expect(responseData).to.have.property('category').that.is.an('object').with.property('id');",
+									"    pm.expect(responseData.category).to.have.property('name');",
+									"    pm.expect(responseData).to.have.property('name');",
+									"    pm.expect(responseData).to.have.property('photoUrls').that.is.an('array');",
+									"    pm.expect(responseData).to.have.property('tags').that.is.an('array');",
+									"    pm.expect(responseData).to.have.property('status');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "2757779a-3a10-4973-8038-c4e770d9ae6d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{petId}},\n  \"category\": {\n    \"id\": 100,\n    \"name\": \"Dinosaur\"\n  },\n  \"name\": \"Panda\",\n  \"photoUrls\": [\n    \"http://en.wikipedia.org/wiki/Tyrannosaurus#/media/File:Tyrannosaurus_rex_mmartyniuk.png\"\n  ],\n    \"tags\": [\n        {\n            \"id\": 100,\n            \"name\": \"reptile\"\n        },\n        {\n            \"id\": 101,\n            \"name\": \"dinosaur\"\n        }\n    ],\n    \"status\": \"{{petStatus}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/pet",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"pet"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "fish",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "available",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes a pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c87481dd-4026-4f27-afad-62306cee8f65",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Verify that petId is the same as in request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.equal(pm.collectionVariables.get(\"petId\"));",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "168009cd-2d21-4b47-925d-3715a339fbed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Base_URL}}/pet/{{petId}}?api_key=special-key",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"pet",
+								"{{petId}}"
+							],
+							"query": [
+								{
+									"key": "api_key",
+									"value": "special-key"
+								},
+								{
+									"key": "petId",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "738ae071-ef54-4471-bc1a-5e39f8843cec"
+		},
+		{
+			"name": "Store",
+			"item": [
+				{
+					"name": "Returns pet inventory by status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d8d865a7-dbd5-4776-abac-85d98a6a76fb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"All required fields exist in the response\", function () {",
+									"    var requiredFields = [\"avai\", \"sold\", , \"string\", \"unavailable\", \"pending\", \"available\", \"alfa\", \"status\"];",
+									"    var responseData = pm.response.json();",
+									"",
+									"    requiredFields.forEach(function(field) {",
+									"        pm.expect(responseData).to.have.property(field);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "3722d193-5196-4164-9277-2e59e871f6c9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{Base_URL}}/store/inventory"
+					},
+					"response": []
+				},
+				{
+					"name": "Place an order pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8d35ed44-b8d8-4e9f-aa67-e8a644fcda1a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"All required fields exist in the response\", function () {",
+									"    var requiredFields = [\"id\", \"petId\", \"quantity\", \"shipDate\", \"status\", \"complete\"];",
+									"    var responseData = pm.response.json();",
+									"",
+									"    requiredFields.forEach(function(field) {",
+									"        pm.expect(responseData).to.have.property(field);",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Verify that petId is the same as in request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.petId).to.equal(pm.collectionVariables.get(\"petId\"));",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"orderId\", jsonData.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "f0d4982a-950d-4df7-bf15-49508eb07d3c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"petId\": {{petId}},\n  \"quantity\": 2,\n  \"shipDate\": \"2025-09-03T21:49:46.341Z\",\n  \"status\": \"placed\",\n  \"complete\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/store/order",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"store",
+								"order"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"type": "text",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find purchase order ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "779ab053-d441-4218-b13a-da008320c473",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"All required fields exist in the response\", function () {",
+									"    var requiredFields = [\"id\", \"petId\", , \"quantity\", \"shipDate\", \"status\", \"complete\"];",
+									"    var responseData = pm.response.json();",
+									"",
+									"    requiredFields.forEach(function(field) {",
+									"        pm.expect(responseData).to.have.property(field);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "d8c194b0-2ae2-4823-be83-ab8d28216646",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{Base_URL}}/store/order/{{orderId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2a02c7d4-22fc-4ecc-80d8-f67e8ef86ae3",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Verify that orderId is the same as in request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.equal(pm.collectionVariables.get(\"orderId\"));",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "c458d18b-fa29-4b93-8789-5c31a13035bd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{Base_URL}}/store/order/{{orderId}}"
+					},
+					"response": []
+				}
+			],
+			"id": "ebbe7dfd-cf3c-477f-bbc5-1c9835cea0b4"
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create list of users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "22f774ac-7080-4359-aa3a-2ea01bcadabe",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "b123d1c3-27bf-4317-8146-dffb5f24d8bb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"id\": 1,\n        \"username\": \"{{username}}\",\n        \"firstName\": \"Alex\",\n        \"lastName\": \"Twen\",\n        \"email\": \"alex43@gmail.com\",\n        \"password\": \"kdiwn223j\",\n        \"phone\": \"string\",\n        \"userStatus\": 0\n    },\n    {\n        \"id\": 2,\n        \"username\": \"Falka\",\n        \"firstName\": \"Falka\",\n        \"lastName\": \"Blood\",\n        \"email\": \"falka12@gmail.com\",\n        \"password\": \"3jejhdh3j\",\n        \"phone\": \"string\",\n        \"userStatus\": 0\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{Base_URL}}/user/createWithList"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by user name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "089f4327-0687-40df-9092-c171789687c0",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Verify that username is the same as in request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.username).to.equal(pm.collectionVariables.get(\"username\"));",
+									"});",
+									"",
+									"pm.test(\"All required fields exist in the response\", function () {",
+									"    var requiredFields = [\"id\", \"username\", \"firstName\", \"lastName\", \"email\", \"password\", \"phone\", \"userStatus\"];",
+									"    var responseData = pm.response.json();",
+									"",
+									"    requiredFields.forEach(function(field) {",
+									"        pm.expect(responseData).to.have.property(field);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "8089a42c-6e1c-4472-8b5a-f584237d853a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{Base_URL}}/user/{{username}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Logs users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8035f0f7-8f12-4032-bcca-0d123d9eb322",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"logged in user session\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "22780dd1-0281-4b8b-9bbd-95b495b90ec7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_URL}}/user/login?username=Falka&password=3jejhdh3j",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"user",
+								"login"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "Falka"
+								},
+								{
+									"key": "password",
+									"value": "3jejhdh3j"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d4a9a91-bc95-49e4-9dad-2d45d3db17d1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "4512d798-a5de-4553-b0da-25073968f4cb",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 4,\n  \"username\": \"Juli\",\n  \"firstName\": \"Julia\",\n  \"lastName\": \"Evans\",\n  \"email\": \"jul587@gmail.com\",\n  \"password\": \"kdkjkj3331\",\n  \"phone\": \"string\",\n  \"userStatus\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{Base_URL}}/user"
+					},
+					"response": []
+				},
+				{
+					"name": "Updated user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "965cc45f-6930-4729-829c-3fc357f1c2b2",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "e2a04732-b579-4fcc-a9bf-139b8b78a456",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 2,\n  \"username\": \"Falka\",\n  \"firstName\": \"Fal1422\",\n  \"lastName\": \"Maike\",\n  \"email\": \"Fakkh@gmai.com\",\n  \"password\": \"jdufb28288b\",\n  \"phone\": \"string\",\n  \"userStatus\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{Base_URL}}/user/Falka"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5a68075d-c877-45cc-b57f-9788df3d00bb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Verify that username is the same as in request\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.equal(pm.collectionVariables.get(\"username\"));",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "5211505d-7e9e-408a-a661-e429d9e2941a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{Base_URL}}/user/{{username}}"
+					},
+					"response": []
+				}
+			],
+			"id": "2bb7e39e-a84a-479c-b892-953ce4cc1c80"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "95d8de23-dd98-4f3b-915a-659c7f48ae98",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "e569619d-5393-48bd-bb63-0804420ce02f",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Base_URL",
+			"value": "https://petstore.swagger.io/v2"
+		},
+		{
+			"key": "petId",
+			"value": "9223372036854347437"
+		},
+		{
+			"key": "petStatus",
+			"value": "sold"
+		},
+		{
+			"key": "orderId",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": "Juli",
+			"type": "string"
+		}
+	]
+}
