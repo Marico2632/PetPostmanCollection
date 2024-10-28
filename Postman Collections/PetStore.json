@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ca140f23-ff07-4902-b1cf-4e8f87d10db7",
+								"id": "394bdc1a-025f-49bd-b0f7-beabd8b0feca",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -37,7 +37,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "3a441f76-cb60-456b-8fff-f0fa48adace9",
+								"id": "1a76f5c5-15ca-4d25-8dc2-0c3000912def",
 								"exec": [
 									""
 								],
